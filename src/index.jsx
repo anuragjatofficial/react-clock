@@ -11,30 +11,31 @@ function Clock(){
     const [breakLength,setBreakLength] = React.useState(5);
     const [sessionLength, setSessionLength] = React.useState(25);
     const [play, setPlay] = React.useState(false);
-
+    const [minutes, setMinutes] = React.useState(sessionLength);
+    // const [seconds, setSeconds] = React.useState(0);
 
     const handlePlayPause = ()=>{
         setPlay(!play);
     };
 
     React.useEffect(() => {
-      console.log(play);
-      let interval;
       if (play) {
-        interval = setInterval(() => {
-          setSessionLength((prevSessionLength) => prevSessionLength - 1);
+        let minutes = sessionLength;
+        let seconds = 0;
+        let interval = setInterval(() => {
+          if (seconds == 0) {
+            seconds = 60;
+            minutes--;
+            document.getElementById("minutes").innerHTML = minutes;
+            if(minutes==-1){
+              clearInterval(interval);
+            }
+          }
+          seconds--;
+          document.getElementById("seconds").innerHTML = seconds;
         }, 1000);
       }
-
-      if (setSessionLength === 0) {
-        setPlay(false);
-        clearInterval(interval); // Stop the timer when it reaches 0
-      }
-
-      return () => {
-        clearInterval(interval); // Clean up the interval on unmount or when isActive changes
-      };
-    }, [play, setPlay, sessionLength, sessionLength]);
+    }, [play, setPlay]);
 
     const handleRefresh = ()=>{
         setSessionLength(25);
@@ -111,7 +112,9 @@ function Clock(){
 
         <div>
           <div id="timer-label">Session</div>
-          <div id="time-left">{sessionLength+`:00`}</div>
+          <div id="time-left">
+            <span id="minutes">{sessionLength}</span>:<span id="seconds">00</span>
+          </div>
         </div>
 
         {/* clickables */}
@@ -128,8 +131,7 @@ function Clock(){
               <i className="fa fa-play" aria-hidden="true"></i>
             )}
           </button>
-          <button className="btn-primary" id="reset"
-          onClick={handleRefresh}>
+          <button className="btn-primary" id="reset" onClick={handleRefresh}>
             <i className="fa fa-refresh" aria-hidden="true"></i>
           </button>
         </div>
