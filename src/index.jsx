@@ -1,6 +1,6 @@
 function App() {
   return (
-    <div className="w-screen h-screen">
+    <div className="w-screen h-screen flex justify-center items-center bg-gradient-to-r from-firstGr to-secondGr">
       <Clock />
     </div>
   );
@@ -13,16 +13,20 @@ function Clock(){
     const [play, setPlay] = React.useState(false);
     const [minutes, setMinutes] = React.useState(sessionLength);
     // const [seconds, setSeconds] = React.useState(0);
-
+    let interval;
     const handlePlayPause = ()=>{
         setPlay(!play);
+        if(play){
+          console.log(play);
+          clearInterval(interval);
+        }
     };
 
     React.useEffect(() => {
       if (play) {
         let minutes = sessionLength;
         let seconds = 0;
-        let interval = setInterval(() => {
+         interval = setInterval(() => {
           if (seconds == 0) {
             seconds = 60;
             minutes--;
@@ -43,11 +47,11 @@ function Clock(){
     };
 
     return (
-      <div className="flex items-center flex-col">
-        <div className="flex-row flex">
+      <div className="flex items-center w-1/2 flex-col gap-6">
+        <div className="flex-row flex w-full justify-around">
           <div>
             <div id="break-label">Break Length</div>
-            <div className="flex">
+            <div className="flex justify-around">
               <button
                 className="btn-primary"
                 id="break-increment"
@@ -76,12 +80,11 @@ function Clock(){
             </div>
           </div>
 
-          <div className="flex">
+          <div className="flex ">
             <div className="flex flex-col">
               <div id="session-label">Session Length</div>
-              <div className="flex">
+              <div className="flex  justify-around">
                 <button
-                  className="btn-primary"
                   id="session-increment"
                   onClick={() =>
                     sessionLength < 60
@@ -89,7 +92,7 @@ function Clock(){
                       : setSessionLength(sessionLength)
                   }
                 >
-                  <i class="fa-solid fa-sort-up fa-xl"></i>
+                  <i className="fa-solid fa-sort-up fa-xl"></i>
                 </button>
                 <div id="session-length">{sessionLength}</div>
                 <button
@@ -110,10 +113,11 @@ function Clock(){
 
         {/* timer */}
 
-        <div>
+        <div className="bg-transparancy rounded-md p-3">
           <div id="timer-label">Session</div>
           <div id="time-left">
-            <span id="minutes">{sessionLength}</span>:<span id="seconds">00</span>
+            <span id="minutes">{sessionLength}</span>:
+            <span id="seconds">00</span>
           </div>
         </div>
 
